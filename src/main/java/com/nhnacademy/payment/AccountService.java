@@ -1,6 +1,9 @@
 package com.nhnacademy.payment;
 
+import com.nhnacademy.payment.exception.InvalidInputException;
+
 public class AccountService {
+
     private final AccountRepository repository;
 
     public AccountService(AccountRepository repository) {
@@ -8,14 +11,17 @@ public class AccountService {
     }
 
     public Account getAccount(String id) {
-        return repository.findByUserId(id); //해쉬맵에있는데 인터페이스의 함수를 호출하면 상속받은 함수가 실행됨??
+        return repository.findByUserId(id);
     }
 
     public Account login(String id) {
-        if (id == null){
-            throw new IllegalArgumentException("null");
+        Account findAccount;
+
+        if (id == null || (findAccount = getAccount(id)) == null){
+            throw new InvalidInputException("null");
         }
-        return getAccount(id);
+
+        return findAccount;
     }
 
 }

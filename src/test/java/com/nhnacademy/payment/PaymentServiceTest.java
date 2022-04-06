@@ -1,28 +1,69 @@
 package com.nhnacademy.payment;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import com.nhnacademy.payment.exception.LackOfBalanceException;
+import com.nhnacademy.payment.exception.MinusAmountException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class PaymentServiceTest {
 
     PaymentService paymentService;
-    @org.junit.jupiter.api.BeforeEach
+    AccountService accountService;
+    Account account;
+    Coupon coupon;
+
+    @BeforeEach
     void setUp() {
-        paymentService = new PaymentService();
-
+        accountService = mock(AccountService.class);
+        paymentService = new PaymentService(accountService);
+        account = new Account("park", 1_000L, 100L);
+        coupon = Coupon.RATE;
     }
 
+    @DisplayName("상품 가격이 음수일 때")
     @Test
-    void InputIsNull(){
-        String input = null;
-        assertThatThrownBy(() -> paymentService.pay(input))
-                .isInstanceOf(E.class)
-    }
-    @Test
-    void accountIdNotInRepository(){
+    void minusAmount() {
+        String id = account.getId();
+        Long amount = -1000L;
 
+        when(accountService.login(id)).thenReturn(account);
+
+        assertThatThrownBy(() -> paymentService.pay(id, amount, coupon))
+            .isInstanceOf(MinusAmountException.class)
+            .hasMessage("가격이 음수에요");
     }
+
+    @DisplayName("고객 잔액 부족")
+    @Test
+    void failAccountPay() {
+        String id = account.getId();
+        Long amount = 2_000L;
+
+        when(accountService.login(id)).thenReturn(account);
+
+        assertThatThrownBy(() -> paymentService.pay(id, amount, coupon))
+            .isInstanceOf(LackOfBalanceException.class)
+            .hasMessage("보유한 잔액이 부족합니다.");
+    }
+
+    @DisplayName("고객 포인트로만 결제")
+    @Test
+    void accountPay() {
+        String id = account.getId();
+        Long amount = 100L;
+
+        when(accountService.login(id)).thenReturn(account);
+
+        Long beforePayMoney = account.getMoney();
+
+        paymentService.pay(id, amount, coupon);
+        assertThat(account.getMoney()).isEqualTo(beforePayMoney);
+    }
+
 }
