@@ -2,6 +2,10 @@ package com.nhnacademy.payment;
 
 import com.nhnacademy.payment.exception.InvalidInputException;
 
+/**
+ * @Author 박영호, 배용현, 윤동열, 최정우
+ *
+ */
 public class AccountService {
 
     private final AccountRepository repository;
