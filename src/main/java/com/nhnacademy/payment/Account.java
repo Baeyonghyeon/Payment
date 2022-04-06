@@ -1,3 +1,5 @@
+package com.nhnacademy.payment;
+
 public class Account {
     private String id;
     private Long money;
