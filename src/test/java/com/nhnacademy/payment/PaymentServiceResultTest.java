@@ -45,7 +45,7 @@ public class PaymentServiceResultTest {
     void takeReceipt(){
         Account account = spy(new Account("park",1_000L,100L));
         String id = account.getId();
-        Long amount = 1000L;
+        long amount = 1000L;
 
         when(accountService.login(id)).thenReturn(account);
 

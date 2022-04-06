@@ -6,7 +6,7 @@ public class Account {
 
     private final static double POINT_RATE = 0.01;
 
-    private String id;
+    private final String id;
     private Long money;
     private Long point;
 
@@ -31,6 +31,7 @@ public class Account {
     public void acceptSms(Alarm sms) {
         System.out.println(sms);
     }
+
     public void takeReceipt(Receipt receipt) {
         System.out.println(receipt);
     }

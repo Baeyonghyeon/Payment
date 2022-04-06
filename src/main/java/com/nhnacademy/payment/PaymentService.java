@@ -30,7 +30,7 @@ public class PaymentService {
         try {
             account = accountService.login(id);
         } catch (InvalidInputException e) {
-
+            System.out.println("존재하지 않는 회원입니다.");
         }
 
         if (amount < 0) {

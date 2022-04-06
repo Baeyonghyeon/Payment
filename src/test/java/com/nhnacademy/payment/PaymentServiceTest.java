@@ -26,11 +26,11 @@ class PaymentServiceTest {
         coupon = Coupon.RATE;
     }
 
-    @DisplayName("상품 가격이 음수일 때")
+    @DisplayName("상품 가격이 0 미만일 때")
     @Test
     void minusAmount() {
         String id = account.getId();
-        Long amount = -1000L;
+        long amount = -1000L;
 
         when(accountService.login(id)).thenReturn(account);
 
@@ -43,7 +43,7 @@ class PaymentServiceTest {
     @Test
     void failAccountPay() {
         String id = account.getId();
-        Long amount = 2_000L;
+        long amount = 2_000L;
 
         when(accountService.login(id)).thenReturn(account);
 
@@ -56,7 +56,7 @@ class PaymentServiceTest {
     @Test
     void accountPay() {
         String id = account.getId();
-        Long amount = 100L;
+        long amount = 100L;
 
         when(accountService.login(id)).thenReturn(account);
 

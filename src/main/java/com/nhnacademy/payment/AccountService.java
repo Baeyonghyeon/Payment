@@ -14,10 +14,14 @@ public class AccountService {
         return repository.findByUserId(id);
     }
 
+    public void signup(Account account) {
+        repository.insert(account);
+    }
+
     public Account login(String id) {
         Account findAccount;
 
-        if (id == null || (findAccount = getAccount(id)) == null){
+        if (id == null || (findAccount = getAccount(id)) == null) {
             throw new InvalidInputException("null");
         }
 
